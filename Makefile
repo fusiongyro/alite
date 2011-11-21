@@ -10,6 +10,7 @@ alite: y.tab.c lex.c util.o
 	$(CC) $(CFLAGS) -o ${.TARGET} ${.ALLSRC} -lm
 
 util.o: util.h util.c
+ast.o: y.tab.h ast.h
 
 y.tab.c y.tab.h: alite.y
 	$(YACC) -d ${.ALLSRC}
