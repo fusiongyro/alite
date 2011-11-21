@@ -46,32 +46,34 @@ wchar_t* intToRaised(int number)
   return result;
 }
 
-void pprint_nice_exponent(node_t* left, int right)
+void pprint_nice_exponent(node_t* left, int right, int level)
 {
-  pprint_node(left);
+  pprint_node(left, level+1);
   wchar_t *s = intToRaised(right);
   printf("%ls", s);
   free(s);
 }
 
-void pprint_arithmetic(arith_exp* node)
+void pprint_arithmetic(arith_exp* node, int level)
 {
   if (node->op == EXP && node->right->type == LITERAL)
-    pprint_nice_exponent(node->left, node->right->u.literal);
+    pprint_nice_exponent(node->left, node->right->u.literal, level);
 
   else
   {
-    printf("(");
-    pprint_node(node->left);
+    if (level > 0)
+      printf("(");
+    pprint_node(node->left, level+1);
     printf(" "); 
     pprint_op(node->op);
     printf(" ");
-    pprint_node(node->right);
-    printf(")");
+    pprint_node(node->right, level+1);
+    if (level > 0)
+      printf(")");
   }
 }
 
-void pprint_node(node_t* node)
+void pprint_node(node_t* node, int level)
 {
   switch (node->type)
   {
@@ -80,7 +82,7 @@ void pprint_node(node_t* node)
       break;
       
     case ARITHMETIC:
-      pprint_arithmetic(&node->u.arithmetic);
+      pprint_arithmetic(&node->u.arithmetic, level);
       break;
   }
 }
