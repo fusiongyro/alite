@@ -4,6 +4,8 @@
 #include <locale.h>
 #include <math.h>
 
+#include "util.h"
+
 int yylex();
 void yyerror(char*);
 
@@ -16,6 +18,17 @@ void yyerror(char*);
 %token DIVIDES
 %token RAISED
 %token NEWLINE
+%token BASE
+%token EXPT
+
+%union {
+  int value;
+  int base;
+  int expt;
+}
+
+%type<value> expression term primary factor INTEGER
+%type<base> BASE EXPT
 
 %%
 
@@ -30,13 +43,15 @@ expression : term         { $$ = $1; }
   | expression PLUS term  { $$ = $1 + $3; }
   | expression MINUS term { $$ = $1 - $3; };
 
-primary : INTEGER         { $$ = $1; };
+primary : INTEGER         { $$ = $1; }
+  | INTEGER BASE          { $$ = baseconvert($1, $2); };
 
 factor : primary          { $$ = $1; }
-  | factor RAISED primary { $$ = pow($1, $3); };
+  | factor RAISED primary { $$ = pow($1, $3); }
+  | factor EXPT           { $$ = pow($1, $2); };
 
 term : factor             { $$ = $1; }
-  | term TIMES factor     { printf("I've got %d %d %d\n", $1, $2, $3); $$ = $1 * $3; }
+  | term TIMES factor     { $$ = $1 * $3; }
   | term DIVIDES factor   { $$ = $1 / $3; };
 
 %% 

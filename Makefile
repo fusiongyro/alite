@@ -6,8 +6,10 @@ all: alite
 clean:
 	rm y.tab.c *.o alite
 
-alite: y.tab.c lex.c
+alite: y.tab.c lex.c util.o
 	$(CC) $(CFLAGS) -o $@ $^
+
+util.o: util.h util.c
 
 y.tab.c y.tab.h: alite.y
 	$(YACC) -d -y $^
