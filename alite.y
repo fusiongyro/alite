@@ -22,6 +22,8 @@ int yyparse();
 %token NEWLINE
 %token BASE
 %token EXPT
+%token LPAREN
+%token RPAREN
 
 %union {
   int value;
@@ -49,7 +51,8 @@ expression : term         { $$ = $1; }
   | expression MINUS term { $$ = make_arith_node($1, MINUS, $3); };
 
 primary : INTEGER         { $$ = make_literal_node($1); }
-  | INTEGER BASE          { $$ = make_literal_node(baseconvert($1, $2)); };
+  | INTEGER BASE          { $$ = make_literal_node(baseconvert($1, $2)); }
+  | LPAREN expression RPAREN { $$ = $2; };
 
 factor : primary          { $$ = $1; }
   | factor RAISED primary { $$ = make_arith_node($1, RAISED, $3); }

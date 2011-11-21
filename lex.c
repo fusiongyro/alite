@@ -38,6 +38,10 @@ int yylex()
       return DIVIDES;
     else if (next == L'↑' || next == L'^')
       return RAISED;
+    else if (next == L'(')
+      return LPAREN;
+    else if (next == L')')
+      return RPAREN;
     else if (next == L'\n')
       return NEWLINE;
     else if (unicodeSuperscriptToDigit(next) >= 0)
