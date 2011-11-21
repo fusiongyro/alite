@@ -1,6 +1,8 @@
 #ifndef __AST_H_
 #define __AST_H_
 
+#include <stdbool.h>
+
 #include "wchar.h"
 
 typedef enum {
@@ -26,6 +28,7 @@ typedef enum {
 
 typedef struct node {
   node_type type;
+  bool parenthesized;
   union {
     arith_exp arithmetic;
     int literal;
@@ -35,6 +38,7 @@ typedef struct node {
 node_t* make_arith_node(node_t* left, int op, node_t* right);
 node_t* make_literal_node(int value);
 int evaluate(node_t* node);
+void parenthesize(node_t* node);
 
 void eval_and_display(node_t* node);
 

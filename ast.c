@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 #include <math.h>
 
@@ -48,4 +49,9 @@ node_t* make_literal_node(int value)
   result->type = LITERAL;
   result->u.literal = value;
   return result;
+}
+
+void parenthesize(node_t* node)
+{
+  node->parenthesized = true;
 }

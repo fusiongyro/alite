@@ -52,7 +52,7 @@ expression : term         { $$ = $1; }
 
 primary : INTEGER         { $$ = make_literal_node($1); }
   | INTEGER BASE          { $$ = make_literal_node(baseconvert($1, $2)); }
-  | LPAREN expression RPAREN { $$ = $2; };
+  | LPAREN expression RPAREN { $$ = $2; parenthesize($$); };
 
 factor : primary          { $$ = $1; }
   | factor RAISED primary { $$ = make_arith_node($1, RAISED, $3); }
