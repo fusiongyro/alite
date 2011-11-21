@@ -32,14 +32,16 @@ wchar_t digitToUnicodeSuperscript(int digit)
 }
 
 
-char* intToRaised(int number)
+wchar_t* intToRaised(int number)
 {
   size_t len = log10(number) + 1;
-  char *result = malloc(sizeof(char) * len);
+  wchar_t *result = malloc(sizeof(wchar_t) * len);
   int i = 0;
 
-  for (int num = number; num /= 10; num > 0)
-    result[i++] = digitToUnicodeSuperscript(num % 10);
+  for (int num = number; num > 0; num = num / 10)
+    result[len-1-i++] = digitToUnicodeSuperscript(num % 10);
+
+  result[i] = L'\0';
   
   return result;
 }
@@ -47,8 +49,8 @@ char* intToRaised(int number)
 void pprint_nice_exponent(node_t* left, int right)
 {
   pprint_node(left);
-  char *s = intToRaised(right);
-  printf("%s", s);
+  wchar_t *s = intToRaised(right);
+  printf("%ls", s);
   free(s);
 }
 
