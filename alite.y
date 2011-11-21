@@ -11,8 +11,6 @@ int yylex();
 void yyerror(char*);
 int yyparse();
 
-//#define YYSTYPE node_t*
-
 %}
 
 %token INTEGER
@@ -31,9 +29,6 @@ int yyparse();
   int expt;
   struct node* node;
 }
-
-/*%type<value> expression term primary factor INTEGER
-  %type<base> BASE EXPT*/
 
 %type<value> INTEGER 
 %type<base> BASE
