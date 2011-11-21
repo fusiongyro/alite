@@ -1,3 +1,6 @@
+#ifndef __AST_H_
+#define __AST_H_
+
 #include "wchar.h"
 
 typedef enum {
@@ -31,7 +34,8 @@ typedef struct node {
 
 node_t* make_arith_node(node_t* left, int op, node_t* right);
 node_t* make_literal_node(int value);
-void pprint_node(node_t* node);
 int evaluate(node_t* node);
 
 void eval_and_display(node_t* node);
+
+#endif

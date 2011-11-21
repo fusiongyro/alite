@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 
+#include "pprint.h"
 #include "eval.h"
 
 int evaluate_arithmetic(arith_exp* arith)
@@ -46,6 +47,6 @@ int evaluate(node_t* node)
 
 void eval_and_display(node_t* node)
 {
-  pprint_node(node);
+  pprint_node(node, 0);
   printf(" = %d\n", evaluate(node));
 }
