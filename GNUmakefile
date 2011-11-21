@@ -7,9 +7,9 @@ clean:
 	rm y.tab.c y.tab.h *.o alite
 
 alite: y.tab.c lex.c util.o
-	$(CC) $(CFLAGS) -o ${.TARGET} ${.ALLSRC} -lm
+	$(CC) $(CFLAGS) -o $@ $^ -lm
 
 util.o: util.h util.c
 
 y.tab.c y.tab.h: alite.y
-	$(YACC) -d ${.ALLSRC}
+	$(YACC) -d $^

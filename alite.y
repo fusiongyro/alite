@@ -8,6 +8,7 @@
 
 int yylex();
 void yyerror(char*);
+int yyparse();
 
 %}
 
