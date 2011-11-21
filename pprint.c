@@ -10,9 +10,9 @@ void pprint_op(int op)
   {
     case ADD: printf("+"); return;
     case SUB: printf("-"); return;
-    case DIV: printf(L"÷"); return;
-    case MUL: printf(L"×"); return;
-    case EXP: printf("↑"); return;
+    case DIV: printf("%lc", L'÷'); return;
+    case MUL: printf("%lc", L'×'); return;
+    case EXP: printf("%lc", L'↑'); return;
   }
 
   printf("?");
