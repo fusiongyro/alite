@@ -5,10 +5,13 @@
 #include <math.h>
 
 #include "util.h"
+#include "ast.h"
 
 int yylex();
 void yyerror(char*);
 int yyparse();
+
+//#define YYSTYPE node_t*
 
 %}
 
@@ -26,34 +29,40 @@ int yyparse();
   int value;
   int base;
   int expt;
+  struct node* node;
 }
 
-%type<value> expression term primary factor INTEGER
-%type<base> BASE EXPT
+/*%type<value> expression term primary factor INTEGER
+  %type<base> BASE EXPT*/
+
+%type<value> INTEGER 
+%type<base> BASE
+%type<expt> EXPT
+%type<node> expression term factor primary
 
 %%
 
 input : /* empty */ | input line;
 
 line : NEWLINE 
-  | expression NEWLINE { printf("%d\n", $1); }
+  | expression NEWLINE    { eval_and_display($1); }
 
 expression : term         { $$ = $1; }
   | PLUS term             { $$ = $2; }
-  | MINUS term            { $$ = -$2; }
-  | expression PLUS term  { $$ = $1 + $3; }
-  | expression MINUS term { $$ = $1 - $3; };
+  | MINUS term            { $$ = make_arith_node(make_literal_node(0), MINUS, $2); }
+  | expression PLUS term  { $$ = make_arith_node($1, PLUS, $3); }
+  | expression MINUS term { $$ = make_arith_node($1, MINUS, $3); };
 
-primary : INTEGER         { $$ = $1; }
-  | INTEGER BASE          { $$ = baseconvert($1, $2); };
+primary : INTEGER         { $$ = make_literal_node($1); }
+  | INTEGER BASE          { $$ = make_literal_node(baseconvert($1, $2)); };
 
 factor : primary          { $$ = $1; }
-  | factor RAISED primary { $$ = pow($1, $3); }
-  | factor EXPT           { $$ = pow($1, $2); };
+  | factor RAISED primary { $$ = make_arith_node($1, RAISED, $3); }
+  | factor EXPT           { $$ = make_arith_node($1, RAISED, make_literal_node($2)); };
 
 term : factor             { $$ = $1; }
-  | term TIMES factor     { $$ = $1 * $3; }
-  | term DIVIDES factor   { $$ = $1 / $3; };
+  | term TIMES factor     { $$ = make_arith_node($1, TIMES, $3); }
+  | term DIVIDES factor   { $$ = make_arith_node($1, DIVIDES, $3); };
 
 %% 
 

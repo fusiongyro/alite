@@ -34,6 +34,9 @@ node_t* make_arith_node(node_t* left, int op, node_t* right)
     case RAISED:
       result->u.arithmetic.op = EXP;
       break;
+
+    default:
+      printf("No op assigned!\n");
   }
 
   return result;
@@ -47,6 +50,20 @@ node_t* make_literal_node(int value)
   return result;
 }
 
+void pprint_op(int op)
+{
+  switch (op)
+  {
+    case ADD: printf("+"); return;
+    case SUB: printf("-"); return;
+    case DIV: printf("/"); return;
+    case MUL: printf("*"); return;
+    case EXP: printf("^"); return;
+  }
+
+  printf("?");
+}
+
 void pprint_node(node_t* node)
 {
   switch (node->type)
@@ -56,9 +73,13 @@ void pprint_node(node_t* node)
       break;
       
     case ARITHMETIC:
+      printf("(");
       pprint_node(node->u.arithmetic.left);
-      printf(" <%d> ", node->u.arithmetic.op);
+      printf(" "); 
+      pprint_op(node->u.arithmetic.op);
+      printf(" ");
       pprint_node(node->u.arithmetic.right);
+      printf(")");
       break;
   }
 }
@@ -83,6 +104,7 @@ int evaluate_arithmetic(arith_exp* arith)
       return pow(evaluate(arith->left), evaluate(arith->right));
   }
 
+  printf("falling out of case in evaluate_arithmetic\n");
   return 0;
 }
 
@@ -99,5 +121,12 @@ int evaluate(node_t* node)
       break;
   }
 
+  printf("falling out of case in evaluate\n");
   return 0;
+}
+
+void eval_and_display(node_t* node)
+{
+  pprint_node(node);
+  printf(" = %d\n", evaluate(node));
 }

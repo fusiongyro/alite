@@ -6,7 +6,7 @@ all: alite
 clean:
 	rm y.tab.c y.tab.h *.o alite
 
-alite: y.tab.c lex.c util.o
+alite: y.tab.c lex.c util.o ast.o
 	$(CC) $(CFLAGS) -o ${.TARGET} ${.ALLSRC} -lm
 
 util.o: util.h util.c
