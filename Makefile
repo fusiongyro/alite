@@ -9,12 +9,13 @@ clean:
 alite: y.tab.c lex.o util.o ast.o pprint.o eval.o symtable.o
 	$(CC) $(CFLAGS) -o ${.TARGET} ${.ALLSRC} -lm
 
-util.o: util.h util.c
-ast.o: y.tab.h ast.h
-eval.o: eval.c eval.h ast.h
+ast.o: ast.c y.tab.h ast.h
+eval.o: eval.c pprint.h ast.h eval.h symtable.h
+lex.o: lex.c y.tab.h
 pprint.o: pprint.c pprint.h ast.h
-lex.o: y.tab.h lex.c
 symtable.o: symtable.c symtable.h
+util.o: util.c util.h
+y.tab.o: y.tab.c util.h ast.h eval.h symtable.h
 
 y.tab.c y.tab.h: alite.y
 	$(YACC) -d ${.ALLSRC}
