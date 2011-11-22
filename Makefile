@@ -1,5 +1,6 @@
 CFLAGS:=--std=c99 -finput-charset=UTF-8
 
+.PHONY: all
 all: alite
 
 .PHONY: clean
