@@ -32,11 +32,12 @@ int evaluate(node_t* node)
   {
     case LITERAL:
       return node->u.literal;
-      break;
       
     case ARITHMETIC:
       return evaluate_arithmetic(&node->u.arithmetic);
-      break;
+
+    case ASSIGNMENT:
+      return evaluate(node->u.assignment.value);
   }
 
   printf("falling out of case in evaluate\n");

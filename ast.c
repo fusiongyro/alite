@@ -57,6 +57,16 @@ node_t* make_literal_node(int value)
   return result;
 }
 
+/* Make an assignment node */
+node_t* make_assignment_node(wchar_t* identifier, node_t* value)
+{
+  node_t* result = malloc(sizeof(node_t));
+  result->type = ASSIGNMENT;
+  result->u.assignment.identifier = identifier;
+  result->u.assignment.value = value;
+  return result;
+}
+
 /* Mark a node as parenthesized */
 void parenthesize(node_t* node)
 {

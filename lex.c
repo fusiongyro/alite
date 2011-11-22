@@ -1,6 +1,10 @@
+#include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
 #include <wchar.h>
+#include <wctype.h>
+
+#define MAX_IDENT 1024
 
 /*
  * Lexing module. Converts input characters into tokens handled by yacc.
@@ -44,6 +48,7 @@ int yylex()
     else if (next == L'(')                  return LPAREN;
     else if (next == L')')                  return RPAREN;
     else if (next == L'\n')                 return NEWLINE;
+    else if (next == L'←')                  return ASSIGN;
 
     /* unicode superscripts */
     else if (unicodeSuperscriptToDigit(next) >= 0)
@@ -80,6 +85,24 @@ int yylex()
       
       ungetwc(next, stdin);
       return INTEGER;
+    }
+
+    /* identifiers */
+    else if (iswalpha(next))
+    {
+      // start loading up an identifier
+      yylval.ident = malloc(sizeof(wchar_t) * MAX_IDENT);
+      
+      int i = 0;
+      yylval.ident[i++] = next;
+      
+      // read some more text
+      while ((next = fgetwc(stdin)) && iswgraph(next) && i < 1023)
+	yylval.ident[i++] = next;
+      yylval.ident[i] = L'\0';
+
+      ungetwc(next, stdin);
+      return IDENT;
     }
   }
   
