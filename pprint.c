@@ -102,5 +102,9 @@ void pprint_node(node_t* node)
       printf(" ← ");
       pprint_node(node->u.assignment.value);
       break;
+
+    case VARIABLE:
+      printf("%ls", node->u.variable);
+      break;
   }
 }

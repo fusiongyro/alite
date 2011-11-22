@@ -3,6 +3,7 @@
 #include <math.h>
 #include <wchar.h>
 #include <wctype.h>
+#include <stdbool.h>
 
 #define MAX_IDENT 1024
 
@@ -30,6 +31,16 @@ int unicodeSuperscriptToDigit(wint_t code)
 int unicodeSubscriptToDigit(wint_t code)
 {
   
+}
+
+bool isASimpleToken(wchar_t tok)
+{
+  return tok == L'+'  ||   tok == L'-'  ||
+         tok == L'*'  ||   tok == L'/'  || 
+         tok == L'^'  ||   tok == L'('  || 
+         tok == L')'  ||   tok == L'\n' || 
+         tok == L'×'  ||   tok == L'÷'  ||
+         tok == L'↑'  ||   tok == L'←';
 }
 
 /* Gateway method: return the next token in standard input. */
@@ -106,7 +117,7 @@ int yylex()
       yylval.ident[i++] = next;
       
       // read some more text
-      while ((next = fgetwc(stdin)) && iswgraph(next) && i < 1023)
+      while ((next = fgetwc(stdin)) && iswgraph(next) && !isASimpleToken(next) && i < 1023)
 	yylval.ident[i++] = next;
       yylval.ident[i] = L'\0';
 

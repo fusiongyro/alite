@@ -22,6 +22,7 @@
 #include "util.h"
 #include "ast.h"
 #include "eval.h"
+#include "symtable.h"
 
 int yylex();
 void yyerror(char*);
@@ -30,6 +31,10 @@ int yyparse();
 #define NARITH(x,y,z) (make_arith_node(x,y,z))
 #define NASSIGN(x,y)  (make_assignment_node(x,y))
 #define NLIT(x)       (make_literal_node(x))
+#define NVAR(x)       (make_variable_node(x))
+
+// symbol table
+symtable_node_t* symbol_table = NULL;
 
 %}
 
@@ -79,6 +84,7 @@ expression : term            { $$ = $1; }
 
 primary : INTEGER            { $$ = NLIT($1); }
   | INTEGER BASE             { $$ = NLIT(baseconvert($1, $2)); }
+  | IDENT                    { $$ = NVAR($1); }
   | LPAREN expression RPAREN { $$ = $2; parenthesize($$); };
 
 factor : primary             { $$ = $1; }
@@ -98,6 +104,7 @@ void yyerror(char* s)
 
 int main(int argc, char* argv[])
 {
+  symbol_table = make_symbol_table();
   setlocale(LC_ALL, "");
   yyparse();
 }

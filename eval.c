@@ -3,10 +3,13 @@
 
 #include "pprint.h"
 #include "eval.h"
+#include "symtable.h"
 
 /*
  * Evaluation methods
  */
+
+extern symtable_node_t* symbol_table;
 
 /* evaluate an arithmetic expression */
 int evaluate_arithmetic(arith_exp* arith)
@@ -28,20 +31,29 @@ int evaluate_arithmetic(arith_exp* arith)
 /* Gateway method: evaluate a node */
 int evaluate(node_t* node)
 {
+  int val = 0;
+
   switch (node->type)
   {
     case LITERAL:
-      return node->u.literal;
-      
+      val = node->u.literal; 
+      break;
+ 
     case ARITHMETIC:
-      return evaluate_arithmetic(&node->u.arithmetic);
+      val = evaluate_arithmetic(&node->u.arithmetic);
+      break;
 
     case ASSIGNMENT:
-      return evaluate(node->u.assignment.value);
+      val = evaluate(node->u.assignment.value);
+      add_symbol(symbol_table, node->u.assignment.identifier, val);
+      break;
+
+    case VARIABLE:
+      val = lookup(symbol_table, node->u.variable);
+      break;
   }
 
-  printf("falling out of case in evaluate\n");
-  return 0;
+  return val;
 }
 
 /* Gateway method: pretty print the node and then evaluate it. */
