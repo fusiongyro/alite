@@ -67,6 +67,15 @@ node_t* make_assignment_node(wchar_t* identifier, node_t* value)
   return result;
 }
 
+/* Make a variable reference node */
+node_t* make_variable_node(wchar_t* ident)
+{
+  node_t* result = malloc(sizeof(node_t));
+  result->type = VARIABLE;
+  result->u.variable = ident;
+  return result;
+}
+
 /* Mark a node as parenthesized */
 void parenthesize(node_t* node)
 {
