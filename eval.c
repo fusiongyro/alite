@@ -47,6 +47,6 @@ int evaluate(node_t* node)
 
 void eval_and_display(node_t* node)
 {
-  pprint_node(node, 0);
+  pprint_node(node);
   printf(" = %d\n", evaluate(node));
 }
