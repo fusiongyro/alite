@@ -64,23 +64,24 @@ symtable_node_t* symbol_table = NULL;
 %type<base> BASE
 %type<expt> EXPT
 %type<ident> IDENT
-%type<node> statement expression term factor primary
+%type<node> expression term factor primary
+
+%left PLUS MINUS
+%left ASSIGN
 
 %%
 
 input : /* empty */ | input line;
 
 line : NEWLINE 
-  | statement NEWLINE        { eval_and_display($1); };
-
-statement : expression       { $$ = $1; }
-  | IDENT ASSIGN expression  { $$ = NASSIGN($1, $3); };
+  | expression NEWLINE        { eval_and_display($1); };
 
 expression : term            { $$ = $1; }
   | PLUS term                { $$ = $2; }
   | MINUS term               { $$ = NARITH(NLIT(0), MINUS, $2); }
   | expression PLUS term     { $$ = NARITH($1, PLUS, $3); }
-  | expression MINUS term    { $$ = NARITH($1, MINUS, $3); };
+  | expression MINUS term    { $$ = NARITH($1, MINUS, $3); }
+  | IDENT ASSIGN expression  { $$ = NASSIGN($1, $3); };
 
 primary : INTEGER            { $$ = NLIT($1); }
   | INTEGER BASE             { $$ = NLIT(baseconvert($1, $2)); }

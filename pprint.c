@@ -98,9 +98,11 @@ void pprint_node(node_t* node)
       break;
 
     case ASSIGNMENT:
+      if (node->parenthesized)  printf("(");
       printf("%ls", node->u.assignment.identifier);
       printf(" ← ");
       pprint_node(node->u.assignment.value);
+      if (node->parenthesized)  printf(")");
       break;
 
     case VARIABLE:
