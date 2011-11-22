@@ -50,6 +50,15 @@ int yylex()
     else if (next == L'\n')                 return NEWLINE;
     else if (next == L'←')                  return ASSIGN;
 
+    /* compound tokens */
+    else if (next == L':')
+    {
+      if ((next = fgetwc(stdin)) == L'=')
+	return ASSIGN;
+      else
+	return -1;
+    }
+
     /* unicode superscripts */
     else if (unicodeSuperscriptToDigit(next) >= 0)
     {
