@@ -108,5 +108,10 @@ void pprint_node(node_t* node)
     case VARIABLE:
       printf("%ls", node->u.variable);
       break;
+
+    case NEGATE:
+      printf("-");
+      pprint_node(node->u.negate);
+      break;
   }
 }

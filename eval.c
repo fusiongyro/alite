@@ -51,6 +51,10 @@ int evaluate(node_t* node)
     case VARIABLE:
       val = lookup(symbol_table, node->u.variable);
       break;
+
+    case NEGATE:
+      val = -evaluate(node->u.negate);
+      break;
   }
 
   return val;

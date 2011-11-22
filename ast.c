@@ -80,6 +80,24 @@ node_t* make_variable_node(wchar_t* ident)
   return result;
 }
 
+node_t* negate(node_t* node)
+{
+  node_t* result = node;
+
+  if (node->type == LITERAL)
+    node->u.literal = -node->u.literal;
+  else
+  {
+    result = malloc(sizeof(node_t));
+    result->type = NEGATE;
+    result->u.negate = node;
+    result->parenthesized = false;
+  }
+
+  return result;
+}
+  
+
 /* Mark a node as parenthesized */
 void parenthesize(node_t* node)
 {
