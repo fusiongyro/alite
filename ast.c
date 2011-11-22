@@ -18,6 +18,7 @@ node_t* make_arith_node(node_t* left, int op, node_t* right)
   result->type = ARITHMETIC;
   result->u.arithmetic.left = left;
   result->u.arithmetic.right = right;
+  result->parenthesized = false;
   
   switch (op)
   {
@@ -54,6 +55,7 @@ node_t* make_literal_node(int value)
   node_t* result = malloc(sizeof(node_t));
   result->type = LITERAL;
   result->u.literal = value;
+  result->parenthesized = false;
   return result;
 }
 
@@ -64,6 +66,7 @@ node_t* make_assignment_node(wchar_t* identifier, node_t* value)
   result->type = ASSIGNMENT;
   result->u.assignment.identifier = identifier;
   result->u.assignment.value = value;
+  result->parenthesized = false;
   return result;
 }
 
@@ -73,6 +76,7 @@ node_t* make_variable_node(wchar_t* ident)
   node_t* result = malloc(sizeof(node_t));
   result->type = VARIABLE;
   result->u.variable = ident;
+  result->parenthesized = false;
   return result;
 }
 
