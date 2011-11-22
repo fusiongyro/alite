@@ -32,6 +32,7 @@ int yyparse();
 #define NASSIGN(x,y)  (make_assignment_node(x,y))
 #define NLIT(x)       (make_literal_node(x))
 #define NVAR(x)       (make_variable_node(x))
+#define NNEGATE(x)    (negate(x));
 
 // symbol table
 symtable_node_t* symbol_table = NULL;
@@ -78,7 +79,7 @@ line : NEWLINE
 
 expression : term            { $$ = $1; }
   | PLUS term                { $$ = $2; }
-  | MINUS term               { $$ = NARITH(NLIT(0), MINUS, $2); }
+  | MINUS term               { $$ = NNEGATE($2); }
   | expression PLUS term     { $$ = NARITH($1, PLUS, $3); }
   | expression MINUS term    { $$ = NARITH($1, MINUS, $3); }
   | IDENT ASSIGN expression  { $$ = NASSIGN($1, $3); };

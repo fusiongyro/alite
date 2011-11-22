@@ -37,7 +37,8 @@ typedef enum {
   ARITHMETIC,
   LITERAL,
   ASSIGNMENT,
-  VARIABLE
+  VARIABLE,
+  NEGATE
 } node_type;
 
 /* The node type itself. It's a tagged union of different nodes. */
@@ -49,6 +50,7 @@ typedef struct node {
     int literal;
     ident_exp assignment;
     wchar_t* variable;
+    struct node* negate;
   } u;
 } node_t;
 
@@ -57,6 +59,7 @@ node_t* make_arith_node(node_t*, int op, node_t*);
 node_t* make_literal_node(int);
 node_t* make_assignment_node(wchar_t* ident, node_t* value);
 node_t* make_variable_node(wchar_t* ident);
+node_t* negate(node_t*);
 
 /* Mark a node as parenthesized (for display later) */
 void parenthesize(node_t* node);
