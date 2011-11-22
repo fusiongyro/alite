@@ -27,10 +27,16 @@ typedef struct {
   struct node* right;
 } arith_exp;
 
+typedef struct {
+  wchar_t* identifier;
+  struct node* value;
+} ident_exp;
+
 /* Node types currently supported */
 typedef enum {
   ARITHMETIC,
-  LITERAL
+  LITERAL,
+  ASSIGNMENT
 } node_type;
 
 /* The node type itself. It's a tagged union of different nodes. */
@@ -40,12 +46,14 @@ typedef struct node {
   union {
     arith_exp arithmetic;
     int literal;
+    ident_exp assignment;
   } u;
 } node_t;
 
 /* Functions for constructing different node types */
 node_t* make_arith_node(node_t*, int op, node_t*);
 node_t* make_literal_node(int);
+node_t* make_assignment_node(wchar_t* ident, node_t* value);
 
 /* Mark a node as parenthesized (for display later) */
 void parenthesize(node_t* node);

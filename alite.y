@@ -27,8 +27,9 @@ int yylex();
 void yyerror(char*);
 int yyparse();
 
-#define ARITH(x,y,z) (make_arith_node(x,y,z))
-#define LIT(x)       (make_literal_node(x))
+#define NARITH(x,y,z) (make_arith_node(x,y,z))
+#define NASSIGN(x,y)  (make_assignment_node(x,y))
+#define NLIT(x)       (make_literal_node(x))
 
 %}
 
@@ -43,43 +44,50 @@ int yyparse();
 %token EXPT
 %token LPAREN
 %token RPAREN
+%token IDENT
+%token ASSIGN
 
 %union {
   int value;
   int base;
   int expt;
+  wchar_t* ident;
   struct node* node;
 }
 
 %type<value> INTEGER 
 %type<base> BASE
 %type<expt> EXPT
+%type<ident> IDENT
 %type<node> expression term factor primary
+
+%left ASSIGN
 
 %%
 
 input : /* empty */ | input line;
 
 line : NEWLINE 
-  | expression NEWLINE       { eval_and_display($1); }
+  | expression NEWLINE       { eval_and_display($1); };
 
 expression : term            { $$ = $1; }
   | PLUS term                { $$ = $2; }
-  | MINUS term               { $$ = ARITH(LIT(0), MINUS, $2); }
-  | expression PLUS term     { $$ = ARITH($1, PLUS, $3); }
-  | expression MINUS term    { $$ = ARITH($1, MINUS, $3); };
+  | MINUS term               { $$ = NARITH(NLIT(0), MINUS, $2); }
+  | expression PLUS term     { $$ = NARITH($1, PLUS, $3); }
+  | expression MINUS term    { $$ = NARITH($1, MINUS, $3); }
+  | IDENT ASSIGN expression  { $$ = NASSIGN($1, $3); };
 
-primary : INTEGER            { $$ = LIT($1); }
-  | INTEGER BASE             { $$ = LIT(baseconvert($1, $2)); }
+primary : INTEGER            { $$ = NLIT($1); }
+  | INTEGER BASE             { $$ = NLIT(baseconvert($1, $2)); }
   | LPAREN expression RPAREN { $$ = $2; parenthesize($$); };
 
 factor : primary             { $$ = $1; }
-  | factor RAISED primary    { $$ = ARITH($1, RAISED, $3); }
-  | factor EXPT              { $$ = ARITH($1, RAISED, LIT($2)); };
+  | factor RAISED primary    { $$ = NARITH($1, RAISED, $3); }
+  | factor EXPT              { $$ = NARITH($1, RAISED, NLIT($2)); };
 
 term : factor                { $$ = $1; }
-  | term TIMES factor        { $$ = ARITH($1, TIMES, $3); }
-  | term DIVIDES factor      { $$ = ARITH($1, DIVIDES, $3); };
+  | term TIMES factor        { $$ = NARITH($1, TIMES, $3); }
+  | term DIVIDES factor      { $$ = NARITH($1, DIVIDES, $3); };
 
 %% 
 

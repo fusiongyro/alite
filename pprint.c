@@ -96,5 +96,11 @@ void pprint_node(node_t* node)
     case ARITHMETIC:
       pprint_arithmetic(&node->u.arithmetic, node->parenthesized);
       break;
+
+    case ASSIGNMENT:
+      printf("%ls", node->u.assignment.identifier);
+      printf(" ← ");
+      pprint_node(node->u.assignment.value);
+      break;
   }
 }
