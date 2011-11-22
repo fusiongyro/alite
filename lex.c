@@ -2,8 +2,13 @@
 #include <math.h>
 #include <wchar.h>
 
+/*
+ * Lexing module. Converts input characters into tokens handled by yacc.
+ */
+
 #include "y.tab.h"
 
+/* Convert a unicode superscript into a digit */
 int unicodeSuperscriptToDigit(wint_t code)
 {
   switch (code)
@@ -17,33 +22,30 @@ int unicodeSuperscriptToDigit(wint_t code)
   }
 }
 
+/* Convert a unicode subscript into a digit */
 int unicodeSubscriptToDigit(wint_t code)
 {
   
 }
 
+/* Gateway method: return the next token in standard input. */
 int yylex()
 {
   wint_t next;
   
   while ((next = fgetwc(stdin)) != WEOF)
   {
-    if (next == L'+')
-      return PLUS;
-    else if (next == L'-')
-      return MINUS;
-    else if (next == L'×' || next == L'*')
-      return TIMES;
-    else if (next == L'÷' || next == L'/')
-      return DIVIDES;
-    else if (next == L'↑' || next == L'^')
-      return RAISED;
-    else if (next == L'(')
-      return LPAREN;
-    else if (next == L')')
-      return RPAREN;
-    else if (next == L'\n')
-      return NEWLINE;
+    /* simple tokens */
+    if (next == L'+')                       return PLUS;
+    else if (next == L'-')                  return MINUS;
+    else if (next == L'×' || next == L'*')  return TIMES;
+    else if (next == L'÷' || next == L'/')  return DIVIDES;
+    else if (next == L'↑' || next == L'^')  return RAISED;
+    else if (next == L'(')                  return LPAREN;
+    else if (next == L')')                  return RPAREN;
+    else if (next == L'\n')                 return NEWLINE;
+
+    /* unicode superscripts */
     else if (unicodeSuperscriptToDigit(next) >= 0)
     {
       yylval.expt = unicodeSuperscriptToDigit(next);
@@ -53,6 +55,8 @@ int yylex()
       ungetwc(next, stdin);
       return EXPT;
     }
+
+    /* unicode subscripts */
     else if (next >= L'₀' && next <= L'₉')
     {
       yylval.base = next - L'₀';
@@ -63,6 +67,8 @@ int yylex()
       ungetwc(next, stdin);
       return BASE;
     }
+
+    /* integers */
     else if (next >= L'0' && next <= L'9')
     {
       // convert to some kind of integer

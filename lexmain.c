@@ -1,3 +1,7 @@
+/*
+ * This is an old lexer test.
+ */
+
 int main() 
 {
   setlocale(LC_ALL, "");

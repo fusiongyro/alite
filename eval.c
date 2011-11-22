@@ -4,22 +4,19 @@
 #include "pprint.h"
 #include "eval.h"
 
+/*
+ * Evaluation methods
+ */
+
+/* evaluate an arithmetic expression */
 int evaluate_arithmetic(arith_exp* arith)
 {
   switch (arith->op)
   {
-    case ADD:
-      return evaluate(arith->left) + evaluate(arith->right);
-      
-    case SUB:
-      return evaluate(arith->left) - evaluate(arith->right);
-
-    case MUL:
-      return evaluate(arith->left) * evaluate(arith->right);
-
-    case DIV:
-      return evaluate(arith->left) / evaluate(arith->right);
-
+    case ADD:  return evaluate(arith->left) + evaluate(arith->right);
+    case SUB:  return evaluate(arith->left) - evaluate(arith->right);
+    case MUL:  return evaluate(arith->left) * evaluate(arith->right);
+    case DIV:  return evaluate(arith->left) / evaluate(arith->right);
     case EXP:
       return pow(evaluate(arith->left), evaluate(arith->right));
   }
@@ -28,6 +25,7 @@ int evaluate_arithmetic(arith_exp* arith)
   return 0;
 }
 
+/* Gateway method: evaluate a node */
 int evaluate(node_t* node)
 {
   switch (node->type)
@@ -45,6 +43,7 @@ int evaluate(node_t* node)
   return 0;
 }
 
+/* Gateway method: pretty print the node and then evaluate it. */
 void eval_and_display(node_t* node)
 {
   pprint_node(node);

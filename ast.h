@@ -1,10 +1,15 @@
 #ifndef __AST_H_
 #define __AST_H_
 
+/*
+ * Abstract syntax tree definitions
+ */
+
 #include <stdbool.h>
 
 #include "wchar.h"
 
+/* These are the arithmetic operators for the AST */
 typedef enum {
   ADD,
   SUB, 
@@ -15,17 +20,20 @@ typedef enum {
 
 struct node;
 
+/* This is an arithmetic node */
 typedef struct {
   struct node* left;
   mathop op;
   struct node* right;
 } arith_exp;
 
+/* Node types currently supported */
 typedef enum {
   ARITHMETIC,
   LITERAL
 } node_type;
 
+/* The node type itself. It's a tagged union of different nodes. */
 typedef struct node {
   node_type type;
   bool parenthesized;
@@ -35,11 +43,11 @@ typedef struct node {
   } u;
 } node_t;
 
-node_t* make_arith_node(node_t* left, int op, node_t* right);
-node_t* make_literal_node(int value);
-int evaluate(node_t* node);
-void parenthesize(node_t* node);
+/* Functions for constructing different node types */
+node_t* make_arith_node(node_t*, int op, node_t*);
+node_t* make_literal_node(int);
 
-void eval_and_display(node_t* node);
+/* Mark a node as parenthesized (for display later) */
+void parenthesize(node_t* node);
 
 #endif
