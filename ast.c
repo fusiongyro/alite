@@ -6,6 +6,11 @@
 #include "y.tab.h"
 #include "ast.h"
 
+/*
+ * AST generating functions
+ */
+
+/* make an arithmetic node */
 node_t* make_arith_node(node_t* left, int op, node_t* right)
 {
   node_t* result = malloc(sizeof(node_t));
@@ -43,6 +48,7 @@ node_t* make_arith_node(node_t* left, int op, node_t* right)
   return result;
 }
 
+/* Make a literal node */
 node_t* make_literal_node(int value)
 {
   node_t* result = malloc(sizeof(node_t));
@@ -51,6 +57,7 @@ node_t* make_literal_node(int value)
   return result;
 }
 
+/* Mark a node as parenthesized */
 void parenthesize(node_t* node)
 {
   node->parenthesized = true;
