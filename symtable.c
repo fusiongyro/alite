@@ -11,7 +11,15 @@ symtable_node_t* make_symbol_table()
 
 void add_symbol(symtable_node_t* table, wchar_t* symbol, int value)
 {
-  for (; table->next != NULL; table = table->next);
+  for (; table->next != NULL; table = table->next)
+  {
+    if (!wcscmp(table->symbol, symbol))
+    {
+      table->value = value;
+      return;
+    }
+  }
+
   table->next = make_symbol_table();
   table->symbol = symbol;
   table->value = value;

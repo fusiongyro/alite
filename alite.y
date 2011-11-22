@@ -66,8 +66,8 @@ symtable_node_t* symbol_table = NULL;
 %type<ident> IDENT
 %type<node> expression term factor primary
 
-%left PLUS MINUS
 %left ASSIGN
+%left PLUS MINUS
 
 %%
 

@@ -40,7 +40,8 @@ bool isASimpleToken(wchar_t tok)
          tok == L'^'  ||   tok == L'('  || 
          tok == L')'  ||   tok == L'\n' || 
          tok == L'×'  ||   tok == L'÷'  ||
-         tok == L'↑'  ||   tok == L'←';
+         tok == L'↑'  ||   tok == L'←'  ||
+         tok == L':';
 }
 
 /* Gateway method: return the next token in standard input. */
