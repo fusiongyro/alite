@@ -1,4 +1,4 @@
-CFLAGS:=--std=c99 -finput-charset=UTF-8
+CFLAGS:=--std=c99 -fms-extensions -finput-charset=UTF-8 -Wall
 
 .PHONY: all
 all: alite

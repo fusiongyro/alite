@@ -30,7 +30,7 @@ int unicodeSuperscriptToDigit(wint_t code)
 /* Convert a unicode subscript into a digit */
 int unicodeSubscriptToDigit(wint_t code)
 {
-  
+  return 0;
 }
 
 bool isASimpleToken(wchar_t tok)
