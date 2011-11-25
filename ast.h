@@ -51,7 +51,7 @@ typedef struct node {
     ident_exp assignment;
     wchar_t* variable;
     struct node* negate;
-  } u;
+  };
 } node_t;
 
 /* Functions for constructing different node types */

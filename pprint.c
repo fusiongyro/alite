@@ -66,7 +66,7 @@ void pprint_nice_exponent(node_t* left, int right)
 void pprint_arithmetic(arith_exp* node, bool parenthesized)
 {
   if (node->op == EXP && node->right->type == LITERAL)
-    pprint_nice_exponent(node->left, node->right->u.literal);
+    pprint_nice_exponent(node->left, node->right->literal);
 
   else
   {
@@ -90,28 +90,28 @@ void pprint_node(node_t* node)
   switch (node->type)
   {
     case LITERAL:
-      printf("%d", node->u.literal);
+      printf("%d", node->literal);
       break;
       
     case ARITHMETIC:
-      pprint_arithmetic(&node->u.arithmetic, node->parenthesized);
+      pprint_arithmetic(&node->arithmetic, node->parenthesized);
       break;
 
     case ASSIGNMENT:
       if (node->parenthesized)  printf("(");
-      printf("%ls", node->u.assignment.identifier);
+      printf("%ls", node->assignment.identifier);
       printf(" ← ");
-      pprint_node(node->u.assignment.value);
+      pprint_node(node->assignment.value);
       if (node->parenthesized)  printf(")");
       break;
 
     case VARIABLE:
-      printf("%ls", node->u.variable);
+      printf("%ls", node->variable);
       break;
 
     case NEGATE:
       printf("-");
-      pprint_node(node->u.negate);
+      pprint_node(node->negate);
       break;
   }
 }

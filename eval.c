@@ -36,24 +36,24 @@ int evaluate(node_t* node)
   switch (node->type)
   {
     case LITERAL:
-      val = node->u.literal; 
+      val = node->literal; 
       break;
  
     case ARITHMETIC:
-      val = evaluate_arithmetic(&node->u.arithmetic);
+      val = evaluate_arithmetic(&node->arithmetic);
       break;
 
     case ASSIGNMENT:
-      val = evaluate(node->u.assignment.value);
-      add_symbol(symbol_table, node->u.assignment.identifier, val);
+      val = evaluate(node->assignment.value);
+      add_symbol(symbol_table, node->assignment.identifier, val);
       break;
 
     case VARIABLE:
-      val = lookup(symbol_table, node->u.variable);
+      val = lookup(symbol_table, node->variable);
       break;
 
     case NEGATE:
-      val = -evaluate(node->u.negate);
+      val = -evaluate(node->negate);
       break;
   }
 
