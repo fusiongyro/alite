@@ -65,37 +65,33 @@ symtable_node_t* symbol_table = NULL;
 %type<base> BASE
 %type<expt> EXPT
 %type<ident> IDENT
-%type<node> expression term factor primary
+%type<node> expression
 
-%left ASSIGN
+%right ASSIGN
 %left PLUS MINUS
+%left TIMES DIVIDES
+%left RAISED EXPT
 
 %%
 
 input : /* empty */ | input line;
 
 line : NEWLINE 
-  | expression NEWLINE        { eval_and_display($1); };
+  | expression NEWLINE             { eval_and_display($1); };
 
-expression : term            { $$ = $1; }
-  | PLUS term                { $$ = $2; }
-  | MINUS term               { $$ = NNEGATE($2); }
-  | expression PLUS term     { $$ = NARITH($1, PLUS, $3); }
-  | expression MINUS term    { $$ = NARITH($1, MINUS, $3); }
-  | IDENT ASSIGN expression  { $$ = NASSIGN($1, $3); };
-
-primary : INTEGER            { $$ = NLIT($1); }
-  | INTEGER BASE             { $$ = NLIT(baseconvert($1, $2)); }
-  | IDENT                    { $$ = NVAR($1); }
-  | LPAREN expression RPAREN { $$ = $2; parenthesize($$); };
-
-factor : primary             { $$ = $1; }
-  | factor RAISED primary    { $$ = NARITH($1, RAISED, $3); }
-  | factor EXPT              { $$ = NARITH($1, RAISED, NLIT($2)); };
-
-term : factor                { $$ = $1; }
-  | term TIMES factor        { $$ = NARITH($1, TIMES, $3); }
-  | term DIVIDES factor      { $$ = NARITH($1, DIVIDES, $3); };
+expression : INTEGER               { $$ = NLIT($1); }
+  | INTEGER BASE                   { $$ = NLIT(baseconvert($1, $2)); }
+  | IDENT                          { $$ = NVAR($1); }
+  | LPAREN expression RPAREN       { $$ = $2; parenthesize($$); }
+  | PLUS expression %prec TIMES    { $$ = $2; }
+  | MINUS expression %prec TIMES   { $$ = NNEGATE($2); }
+  | expression PLUS expression     { $$ = NARITH($1, PLUS, $3); }
+  | expression MINUS expression    { $$ = NARITH($1, MINUS, $3); }
+  | expression TIMES expression    { $$ = NARITH($1, TIMES, $3); }
+  | expression DIVIDES expression  { $$ = NARITH($1, DIVIDES, $3); }
+  | IDENT ASSIGN expression        { $$ = NASSIGN($1, $3); }
+  | expression RAISED expression   { $$ = NARITH($1, RAISED, $3); }
+  | expression EXPT                { $$ = NARITH($1, RAISED, NLIT($2)); };
 
 %% 
 
