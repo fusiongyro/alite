@@ -30,7 +30,7 @@ int unicodeSuperscriptToDigit(wint_t code)
 /* Convert a unicode subscript into a digit */
 int unicodeSubscriptToDigit(wint_t code)
 {
-  return 0;
+  return code - L'₀';
 }
 
 bool isASimpleToken(wchar_t tok)
@@ -88,7 +88,7 @@ int yylex()
       yylval.base = next - L'₀';
       
       while ((next = fgetwc(stdin)) >= L'₀' && next <= L'₉')
-        yylval.base = yylval.base * 10 + (next - L'₀');
+        yylval.base = yylval.base * 10 + unicodeSubscriptToDigit(next);
       
       ungetwc(next, stdin);
       return BASE;
